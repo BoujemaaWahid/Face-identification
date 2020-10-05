@@ -202,7 +202,7 @@ class RecogMultiFromImages(Recognation):
                     top, right, bottom, left = location
                     rect = ( (left, top), (right, bottom) )
                     rect2 = ( (left, bottom+20), (right, bottom) )
-                    txt = (left, bottom+2)
+                    txt = (left, bottom)
                     draw.rectangle( rect, outline=face[2], width=self.getRectangleWidth())
                     draw.rectangle( rect2, outline=face[2], fill=face[2], width=self.getRectangleWidth())
                     draw.text(txt, name, fill=self.getTextColor(), font=self.getTextFont())
