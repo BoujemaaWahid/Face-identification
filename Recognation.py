@@ -64,6 +64,7 @@ class LiveRecognation(Recognation):
     __persons = None
     __known_face_encodings = []
     __known_face_names = []
+    __resizer = (0.20, 5)
     def __init__(self, persons, font=cv2.FONT_HERSHEY_DUPLEX, rectangle_width=2, rect_color=(216, 117, 2), text_color=(255,255,255), precision=0.6):
         super().__init__(font=font, rectangle_width=rectangle_width, rect_color=rect_color, text_color=text_color, precision=precision)
         self.__video_capture = cv2.VideoCapture(0)
@@ -81,7 +82,7 @@ class LiveRecognation(Recognation):
         process_this_frame = True
         while True:
             ret, frame = self.__video_capture.read()
-            small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+            small_frame = cv2.resize(frame, (0, 0), fx=self.__resizer[0], fy=self.__resizer[0])
             rgb_small_frame = small_frame[:, :, ::-1]
             if process_this_frame:
                 face_locations = fr.face_locations(rgb_small_frame)
@@ -97,10 +98,10 @@ class LiveRecognation(Recognation):
                         face_names.append(name)
             process_this_frame = not process_this_frame
             for (top, right, bottom, left), name in zip(face_locations, face_names):
-                top *= 4
-                right *= 4
-                bottom *= 4
-                left *= 4
+                top *= self.__resizer[1]
+                right *= self.__resizer[1]
+                bottom *= self.__resizer[1]
+                left *= self.__resizer[1]
                 cv2.rectangle(frame, (left, top), (right, bottom), self.getRectangleColor(), self.getRectangleWidth())
                 cv2.rectangle(frame, (left, bottom - 20), (right, bottom), self.getRectangleColor(), cv2.FILLED)
                 cv2.putText(frame, name, (left + 6, bottom - 6), self.getTextFont(), 0.5, self.getTextColor(), 1)
